@@ -59,10 +59,17 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(cookieParser());
-app.use(bodyParser());
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 app.use(methodOverride());
 app.use(session({
-    secret: 'keyboard cat'
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
 }));
 // Initialize Passport!  Also use passport.session() middleware, to support
 // persistent login sessions (recommended).
@@ -120,8 +127,15 @@ app.use(express.static(__dirname + '/public'));
 
 
 
+var server = app.listen(3000, function () {
 
-app.listen(3000);
+  var host = server.address().address
+  var port = server.address().port
+
+  console.log('Example app listening at http://%s:%s', host, port)
+
+})
+
 
 
 // Simple route middleware to ensure user is authenticated.
