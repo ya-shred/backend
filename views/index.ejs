@@ -1,5 +1,14 @@
 <% if (!user) { %>
 	<h2>Welcome! Please log in.</h2>
 <% } else { %>
-	<p>Hello, <%= JSON.stringify(user) %>.</p>
+<p>userName: <%= user.userName %></p>
+<p>displayName: <%= user.displayName %></p>
+<p>email: <%= user.email %></p>
+<p>profileUrl: <%= user.profileUrl %></p>
+<p>avatarUrl: <%= user.avatarUrl %></p>
+<p>githubId: <%= user.githubId %></p>
+<p>accessToken: <%= user.accessToken %></p>
 <% } %>
+
+
+
