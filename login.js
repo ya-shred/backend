@@ -23,6 +23,15 @@ var app = express();
 // configure Express
 
 var sessionCookie = 'connect.sid';
+var sessionOptions = {
+    secret: 'shred 15',
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoStore({
+        url: mongoUrl
+    }),
+    name: sessionCookie
+}
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -34,15 +43,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.use(methodOverride());
-app.use(session({
-    secret: 'shred 15',
-    resave: true,
-    saveUninitialized: true,
-    store: new MongoStore({
-        url: mongoUrl
-    }),
-    name: sessionCookie
-}));
+app.use(session(sessionOptions));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,9 +65,19 @@ passport.use(new GitHubStrategy({
 
 app.get('/', function (req, res) {
     if (req.user) {
-        return api.getUser(req.user.id, redirectToChat.bind(null, req, res));
+        return res.redirect('/auth/github/callback'); // Проверяем, что пользователю разрешен доступ
+        //return api.getUser(req.user.id, redirectToChat.bind(null, req, res));
     }
     res.render('login');
+
+    console.log("Navigated to /");
+});
+
+app.get('/login', function (req, res) {
+    if (req.user) {
+        return api.getUser(req.user.id, redirectToChat.bind(null, req, res));
+    }
+    res.redirect('/');
 
     console.log("Navigated to /");
 });
@@ -79,13 +90,29 @@ app.get('/auth/github',
     });
 
 app.get('/auth/github/callback', passport.authenticate('github', {
-    successRedirect: '/',
+    successRedirect: '/login',
     failureRedirect: '/'
 }));
 
 app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
+});
+
+app.get('/auth/session/:sessionId', function (req, res) {
+    var sess = req.params.sessionId;
+    sessionOptions.store.get(sess, function (error, session) {
+        console.log('request session', session);
+        if (error) {
+            return res.send('invalid session id');
+        }
+        api.getUser(session.passport.user, function (err, user) {
+            if (err) {
+                return res.send('cann\'t find user by session id');
+            }
+            res.send(user);
+        });
+    });
 });
 
 var server = app.listen(config.get('port'), function () {
