@@ -48,6 +48,8 @@ function getUser(db, id, callback) {
  */
 function storeUser(db, user, callback) {
     var id = user.id;
+    console.log(user);
+
     console.log('storeUser with id', id);
     MongoClient.connect(db, function(err, db) {
         var collection = db.collection('users');
@@ -55,7 +57,7 @@ function storeUser(db, user, callback) {
             id: user.id,
             userName: user.username,
             displayName: user.displayName,
-            email: user.emails[0].value,
+            email: user.email,
             profileUrl: user.profileUrl,
             avatarUrl: user._json.avatar_url
         }, function(err) {
