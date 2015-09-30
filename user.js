@@ -55,6 +55,7 @@ function storeUser(db, user, callback) {
         var collection = db.collection('users');
         collection.insert({
             id: user.id,
+            _full: user,
             userName: user.username,
             displayName: user.displayName,
             email: user.email,

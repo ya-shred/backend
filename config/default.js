@@ -5,5 +5,5 @@ module.exports = {
     port: 8011,
     //redirectUrl: 'https://shri-frontend.herokuapp.com/',
     redirectUrl: 'http://localhost:3000',
-    dbConnectionUrl: "mongodb://localhost:27017/myproject"
+    dbConnectionUrl: "mongodb://localhost:27017/backend"
 };

@@ -31,7 +31,7 @@ var sessionOptions = {
         url: mongoUrl
     }),
     name: sessionCookie
-}
+};
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -103,8 +103,8 @@ app.get('/auth/session/:sessionId', function (req, res) {
     var sess = req.params.sessionId;
     sessionOptions.store.get(sess, function (error, session) {
         console.log('request session', session);
-        if (error) {
-            return res.send('invalid session id');
+        if (error || !session || !session.passport.user) {
+            return res.status(400).send('invalid session id');
         }
         api.getUser(session.passport.user, function (err, user) {
             if (err) {
