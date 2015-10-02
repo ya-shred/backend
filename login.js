@@ -1,5 +1,6 @@
 var express = require('express'),
     passport = require('passport'),
+    path = require('path');
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override'),
@@ -33,8 +34,9 @@ var sessionOptions = {
     name: sessionCookie
 };
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs')
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({
@@ -47,6 +49,10 @@ app.use(session(sessionOptions));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 passport.serializeUser(api.serializeUser);
 passport.deserializeUser(api.deserializeUser);
@@ -68,7 +74,7 @@ app.get('/', function (req, res) {
         return res.redirect('/auth/github/callback'); // Проверяем, что пользователю разрешен доступ
         //return api.getUser(req.user.id, redirectToChat.bind(null, req, res));
     }
-    res.render('login');
+    res.render('index');
 
     console.log("Navigated to /");
 });
