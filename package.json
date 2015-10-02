@@ -18,10 +18,12 @@
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
+    "hbs": "^3.1.1",
     "method-override": "^2.3.5",
     "mongodb": "^2.0.43",
     "passport": "^0.3.0",
-    "passport-github": "^1.0.0"
+    "passport-github": "^1.0.0",
+    "stylus": "^0.52.4"
   },
   "devDependencies": {
     "supervisor": "^0.9.1"

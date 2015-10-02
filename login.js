@@ -8,6 +8,7 @@ var express = require('express'),
     MongoClient = require('mongodb').MongoClient,
     MongoStore = require('connect-mongo')(session),
     assert = require('assert');
+var stylus = require('stylus');
 
 var config = require('config');
 
@@ -36,7 +37,7 @@ var sessionOptions = {
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs')
+app.set('view engine', 'hbs');
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({
@@ -50,7 +51,7 @@ app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -67,12 +68,9 @@ passport.use(new GitHubStrategy({
     }
 ));
 
-//app.use(express.static(__dirname + '/public'));
-
 app.get('/', function (req, res) {
     if (req.user) {
         return res.redirect('/auth/github/callback'); // Проверяем, что пользователю разрешен доступ
-        //return api.getUser(req.user.id, redirectToChat.bind(null, req, res));
     }
     res.render('index');
 
