@@ -208,6 +208,7 @@ body .main {
   width: 100%;
   padding: 40px 60px;
   position: relative;
+  z-index: 1;
   box-sizing: border-box;
 }
 body .main .logo {
